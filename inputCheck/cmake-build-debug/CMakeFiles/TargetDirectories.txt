@@ -1,0 +1,3 @@
+C:/Users/Ignat/Desktop/Шестопалов Игнат Романович/ОАиП/Сем 2/inputCheck/cmake-build-debug/CMakeFiles/InputCheck.dir
+C:/Users/Ignat/Desktop/Шестопалов Игнат Романович/ОАиП/Сем 2/inputCheck/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Ignat/Desktop/Шестопалов Игнат Романович/ОАиП/Сем 2/inputCheck/cmake-build-debug/CMakeFiles/rebuild_cache.dir
