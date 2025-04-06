@@ -7,10 +7,15 @@
 #define DLL_EXPORT
 #endif
 
+#include <string>
+
 namespace mylib {
     DLL_EXPORT int checkYourSolution(int lastNum);
     DLL_EXPORT double checkTryToInputDouble();
     DLL_EXPORT int checkTryToInputMaxSizeOfSmth();
+    DLL_EXPORT int checkTryToInputInt();
+    DLL_EXPORT int checkTryToInputChar();
+    DLL_EXPORT std::string trimInput(const std::string& input); // Добавляем trimInput в публичный интерфейс
 }
 
 #endif // INPUTCHECK_INPUTCHECK_H

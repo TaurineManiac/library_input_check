@@ -5,50 +5,52 @@
 #include <cctype> // Для std::isdigit
 
 namespace mylib {
+    // Вспомогательная функция для обрезки пробелов
+    std::string trimInput(const std::string& input) {
+        int start = 0;
+        int end = input.length() - 1;
+
+        while (start < input.length() && (input[start] == ' ' || input[start] == '\t')) {
+            start++;
+        }
+
+        while (end >= 0 && (input[end] == ' ' || input[end] == '\t')) {
+            end--;
+        }
+
+        if (start > end) {
+            return "";
+        }
+
+        return input.substr(start, end - start + 1);
+    }
+
     int checkYourSolution(int lastNum) {
         std::string input;
-        int k;
+        int result;
 
         while (true) {
             std::cout << "Введите число для выбора: ";
             std::getline(std::cin, input);
 
-            // Проверка на пустой ввод
             if (input.empty()) {
                 std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Удаляем пробелы в начале и конце, используя int вместо size_t
-            int start = 0;
-            int end = input.length() - 1;
-
-            // Находим первый непробельный символ
-            while (start < input.length() && (input[start] == ' ' || input[start] == '\t')) {
-                start++;
-            }
-
-            // Находим последний непробельный символ
-            while (end >= 0 && (input[end] == ' ' || input[end] == '\t')) {
-                end--;
-            }
-
-            // Проверяем, не состоит ли строка только из пробелов
-            if (start > end) {
+            input = trimInput(input);
+            if (input.empty()) {
                 std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Обрезаем строку
-            input = input.substr(start, end - start + 1);
-
             try {
-                k = std::stoi(input);
-                if (k < 1 || k > lastNum) {
+                result = std::stoi(input);
+                if (result < 1 || result > lastNum) {
                     std::cout << "Число должно быть от 1 до " << lastNum << std::endl;
                     continue;
                 }
-                return k;
+                return result;
             } catch (const std::invalid_argument& ia) {
                 std::cout << "Некорректный ввод. Введите целое число." << std::endl;
             } catch (const std::out_of_range& oor) {
@@ -59,42 +61,23 @@ namespace mylib {
 
     double checkTryToInputDouble() {
         std::string input;
-        double k;
+        double result;
 
         while (true) {
             std::cout << "Введите число с плавающей точкой: ";
             std::getline(std::cin, input);
 
-            // Проверка на пустой ввод
             if (input.empty()) {
                 std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Удаляем пробелы в начале и конце, используя int вместо size_t
-            int start = 0;
-            int end = input.length() - 1;
-
-            // Находим первый непробельный символ
-            while (start < input.length() && (input[start] == ' ' || input[start] == '\t')) {
-                start++;
-            }
-
-            // Находим последний непробельный символ
-            while (end >= 0 && (input[end] == ' ' || input[end] == '\t')) {
-                end--;
-            }
-
-            // Проверяем, не состоит ли строка только из пробелов
-            if (start > end) {
+            input = trimInput(input);
+            if (input.empty()) {
                 std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Обрезаем строку
-            input = input.substr(start, end - start + 1);
-
-            // Проверяем количество точек
             int dotCounter = 0;
             for (int i = 0; i < input.length(); i++) {
                 if (input[i] == '.') {
@@ -106,7 +89,6 @@ namespace mylib {
                 continue;
             }
 
-            // Проверяем формат числа
             bool valid = true;
             bool hasDot = (dotCounter == 1);
             int dotPos = -1;
@@ -118,22 +100,18 @@ namespace mylib {
             }
             int pos = 0;
 
-            // Проверяем, начинается ли строка с минуса
             if (input[0] == '-') {
                 pos++;
             }
 
-            // Проверяем, что перед точкой есть хотя бы одна цифра
             if (pos == input.length() || !std::isdigit(input[pos])) {
                 valid = false;
             } else if (hasDot) {
-                // Проверяем, что после точки есть хотя бы одна цифра
                 if (dotPos == 0 || dotPos == input.length() - 1 || !std::isdigit(input[dotPos - 1]) || !std::isdigit(input[dotPos + 1])) {
                     valid = false;
                 }
             }
 
-            // Проверяем, что все символы корректны
             for (int i = pos; i < input.length(); i++) {
                 if (i != dotPos && !std::isdigit(input[i])) {
                     valid = false;
@@ -147,8 +125,8 @@ namespace mylib {
             }
 
             try {
-                k = std::stod(input);
-                return k;
+                result = std::stod(input);
+                return result;
             } catch (const std::invalid_argument& ia) {
                 std::cout << "Некорректный ввод. Введите число с плавающей точкой." << std::endl;
             } catch (const std::out_of_range& oor) {
@@ -159,53 +137,104 @@ namespace mylib {
 
     int checkTryToInputMaxSizeOfSmth() {
         std::string input;
-        int k;
+        int result;
 
         while (true) {
-            std::cout << "Введите число для выбора: ";
+            std::cout << "Введите число для максимального размера: ";
             std::getline(std::cin, input);
 
-            // Проверка на пустой ввод
             if (input.empty()) {
                 std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Удаляем пробелы в начале и конце, используя int вместо size_t
-            int start = 0;
-            int end = input.length() - 1;
-
-            // Находим первый непробельный символ
-            while (start < input.length() && (input[start] == ' ' || input[start] == '\t')) {
-                start++;
-            }
-
-            // Находим последний непробельный символ
-            while (end >= 0 && (input[end] == ' ' || input[end] == '\t')) {
-                end--;
-            }
-
-            // Проверяем, не состоит ли строка только из пробелов
-            if (start > end) {
+            input = trimInput(input);
+            if (input.empty()) {
                 std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
                 continue;
             }
 
-            // Обрезаем строку
-            input = input.substr(start, end - start + 1);
-
             try {
-                k = std::stoi(input);
-                if (k <= 0) {
+                result = std::stoi(input);
+                if (result <= 0) {
                     std::cout << "Размер должен быть больше 0. Попробуйте снова." << std::endl;
                     continue;
                 }
-                return k;
+                return result;
             } catch (const std::invalid_argument& ia) {
                 std::cout << "Некорректный ввод. Введите целое число." << std::endl;
             } catch (const std::out_of_range& oor) {
                 std::cout << "Число выходит за пределы диапазона для типа int." << std::endl;
             }
+        }
+    }
+
+    int checkTryToInputInt() {
+        std::string input;
+        int result;
+
+        while (true) {
+            std::cout << "Введите целое число: ";
+            std::getline(std::cin, input);
+
+            if (input.empty()) {
+                std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            input = trimInput(input);
+            if (input.empty()) {
+                std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
+                continue;
+            }
+            bool isAllDigits = true;
+            for (int i = 0; i < input.size(); i++) {
+                if (i == 0 && input[i] == '-') { // Разрешаем минус в начале
+                    continue;
+                }
+                if (!isdigit(input[i])) {
+                    isAllDigits = false;
+                    break;
+                }
+            }
+            if (!isAllDigits) {
+                std::cout << "Некорректный ввод. Введите целое число." << std::endl;
+                continue;
+            }
+            try {
+                result = std::stoi(input);
+                return result;
+            } catch (const std::invalid_argument& ia) {
+                std::cout << "Некорректный ввод. Введите целое число." << std::endl;
+            } catch (const std::out_of_range& oor) {
+                std::cout << "Число выходит за пределы диапазона для типа int." << std::endl;
+            }
+        }
+    }
+
+    int checkTryToInputChar() {
+        std::string input;
+        while (true) {
+            std::cout << "Введите символ: ";
+            std::getline(std::cin, input);
+
+            if (input.empty()) {
+                std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            input = trimInput(input);
+            if (input.empty()) {
+                std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            if (input.length() != 1) {
+                std::cout << "Введите ровно один символ." << std::endl;
+                continue;
+            }
+
+            return static_cast<int>(input[0]);
         }
     }
 }
