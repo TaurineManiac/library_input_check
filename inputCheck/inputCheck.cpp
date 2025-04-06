@@ -125,6 +125,8 @@ namespace mylib {
             }
 
             try {
+                // Устанавливаем локаль для чисел, чтобы точка всегда распознавалась как десятичный разделитель
+                std::locale::global(std::locale("C"));
                 result = std::stod(input);
                 return result;
             } catch (const std::invalid_argument& ia) {
