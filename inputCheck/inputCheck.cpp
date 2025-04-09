@@ -2,10 +2,9 @@
 #include <string>
 #include <iostream>
 #include <locale.h>
-#include <cctype> // Для std::isdigit
+#include <cctype>
 
 namespace mylib {
-    // Вспомогательная функция для обрезки пробелов
     std::string trimInput(const std::string& input) {
         int start = 0;
         int end = input.length() - 1;
@@ -23,6 +22,41 @@ namespace mylib {
         }
 
         return input.substr(start, end - start + 1);
+    }
+
+    std::string checkTryToInputString(bool allowCyrillic) {
+        std::string input;
+        while (true) {
+            std::cout << "Введите строку: ";
+            std::getline(std::cin, input);
+
+            if (input.empty()) {
+                std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            input = trimInput(input);
+            if (input.empty()) {
+                std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            if (!allowCyrillic) {
+                bool hasCyrillic = true;
+                for (char& c : input) {
+                    if (std::isalpha(c)) {
+                        c = std::tolower(c);
+                        hasCyrillic = false;
+                    }
+                }
+                if (hasCyrillic) {
+                    std::cout << "Строка должна содержать символы латиницы. Попробуйте снова." << std::endl;
+                    continue;
+                }
+            }
+
+            return input;
+        }
     }
 
     int checkYourSolution(int lastNum) {
@@ -125,7 +159,6 @@ namespace mylib {
             }
 
             try {
-                // Устанавливаем локаль для чисел, чтобы точка всегда распознавалась как десятичный разделитель
                 std::locale::global(std::locale("C"));
                 result = std::stod(input);
                 return result;
@@ -191,7 +224,7 @@ namespace mylib {
             }
             bool isAllDigits = true;
             for (int i = 0; i < input.size(); i++) {
-                if (i == 0 && input[i] == '-') { // Разрешаем минус в начале
+                if (i == 0 && input[i] == '-') {
                     continue;
                 }
                 if (!isdigit(input[i])) {

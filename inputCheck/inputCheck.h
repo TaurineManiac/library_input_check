@@ -15,7 +15,8 @@ namespace mylib {
     DLL_EXPORT int checkTryToInputMaxSizeOfSmth();
     DLL_EXPORT int checkTryToInputInt();
     DLL_EXPORT int checkTryToInputChar();
-    DLL_EXPORT std::string trimInput(const std::string& input); // Добавляем trimInput в публичный интерфейс
+    DLL_EXPORT std::string trimInput(const std::string& input);
+    DLL_EXPORT std::string checkTryToInputString(bool allowCyrillic = false); // Новая функция для ввода строк
 }
 
 #endif // INPUTCHECK_INPUTCHECK_H
