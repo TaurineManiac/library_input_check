@@ -20,6 +20,7 @@ namespace mylib {
     DLL_EXPORT std::string generateStringIndex();
     DLL_EXPORT int generateRandomNumber(int min,int max);
     DLL_EXPORT std::string generateCurrentDataTime();
+    DLL_EXPORT std::string generateRandomString(int max);
 }
 
 #endif // INPUTCHECK_INPUTCHECK_H

@@ -304,4 +304,14 @@ namespace mylib {
         std::uniform_int_distribution<> dis(min, max);
         return dis(gen);
     }
+
+    std::string generateRandomString(int max){
+        std::string str="";
+        int maxsize=generateRandomNumber(1,max);
+        for(int i=0;i<maxsize;i++){
+            int ASCII = generateRandomNumber(97,122);
+            str+=(char)ASCII;
+        }
+        return str;
+    }
 }
