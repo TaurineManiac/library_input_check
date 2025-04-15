@@ -17,6 +17,9 @@ namespace mylib {
     DLL_EXPORT int checkTryToInputChar();
     DLL_EXPORT std::string trimInput(const std::string& input);
     DLL_EXPORT std::string checkTryToInputString(bool allowCyrillic = false); // Новая функция для ввода строк
+    DLL_EXPORT std::string generateStringIndex();
+    DLL_EXPORT int generateRandomNumber(int min,int max);
+    DLL_EXPORT std::string generateCurrentDataTime();
 }
 
 #endif // INPUTCHECK_INPUTCHECK_H

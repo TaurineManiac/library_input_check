@@ -1,8 +1,12 @@
 #include "inputCheck.h"
 #include <string>
 #include <iostream>
-#include <locale.h>
 #include <cctype>
+#include <random>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+#include <locale>
 
 namespace mylib {
     std::string trimInput(const std::string& input) {
@@ -271,5 +275,33 @@ namespace mylib {
 
             return static_cast<int>(input[0]);
         }
+    }
+
+    // Генерация строки-индекса
+    std::string generateStringIndex() {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(1, 999999);
+        int num = dis(gen);
+        std::ostringstream oss;
+        oss << std::setw(6) << std::setfill('0') << num;
+        return oss.str();
+    }
+
+    // Получение текущего времени в формате "YYYY-MM-DD HH:MM:SS"
+    std::string generateCurrentDataTime() {
+        std::time_t now = std::time(nullptr);
+        std::tm* ltm = std::localtime(&now);
+        std::ostringstream oss;
+        oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
+        return oss.str();
+    }
+
+    // Генерация случайного числа в диапазоне [min, max]
+    int generateRandomNumber(int min, int max) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(min, max);
+        return dis(gen);
     }
 }
