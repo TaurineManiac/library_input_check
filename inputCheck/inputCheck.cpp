@@ -277,41 +277,115 @@ namespace mylib {
         }
     }
 
-    // Генерация строки-индекса
-    std::string generateStringIndex() {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(1, 999999);
-        int num = dis(gen);
-        std::ostringstream oss;
-        oss << std::setw(6) << std::setfill('0') << num;
-        return oss.str();
-    }
-
-    // Получение текущего времени в формате "YYYY-MM-DD HH:MM:SS"
-    std::string generateCurrentDataTime() {
-        std::time_t now = std::time(nullptr);
-        std::tm* ltm = std::localtime(&now);
-        std::ostringstream oss;
-        oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
-        return oss.str();
-    }
-
-    // Генерация случайного числа в диапазоне [min, max]
-    int generateRandomNumber(int min, int max) {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(min, max);
-        return dis(gen);
-    }
-
-    std::string generateRandomString(int max){
-        std::string str="";
-        int maxsize=generateRandomNumber(1,max);
-        for(int i=0;i<maxsize;i++){
-            int ASCII = generateRandomNumber(97,122);
-            str+=(char)ASCII;
+    bool isDashHere(const std::string& s) {
+        if (s.empty()) return false;
+        if (s[0] == '-' || s[s.length() - 1] == '-') return false;
+        for (int i = 0; i < s.length(); ++i) {
+            if (s[i] == '-') {
+                if (i == 0 || i == s.length() - 1 || (i + 1 < s.length() && s[i + 1] == '-')) {
+                    return false;
+                }
+            }
         }
-        return str;
+        return true;
+    }
+
+    std::string checkTryToInputStringName(const std::string& s) {
+        std::string input = trimInput(s);
+        while (true) {
+            std::cout << "Введите строку: ";
+            std::getline(std::cin, input);
+
+            if (input.empty()) {
+                std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            input = trimInput(input);
+            if (input.empty()) {
+                std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            if (input.length() > 20) {
+                std::cout << "Строка не должна превышать 20 символов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            bool valid = true;
+            for (int i = 0; i < input.length(); ++i) {
+                if (!std::isalpha(input[i]) && input[i] != '-') {
+                    valid = false;
+                    break;
+                }
+                if (input[i] == '-' && (i == 0 || i == input.length() - 1 || !std::isalpha(input[i - 1]) || !std::isalpha(input[i + 1]))) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (!valid || !isDashHere(input)) {
+                std::cout << "Строка должна содержать только буквы и символ '-', расположенный между двумя буквами, не в начале, не в конце и без последовательных тире. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            return input;
+        }
+    }
+
+    std::string checkTryToInputPassword(const std::string& s) {
+        std::string input = trimInput(s);
+        while (true) {
+            std::cout << "Введите пароль: ";
+            std::getline(std::cin, input);
+
+            if (input.empty()) {
+                std::cout << "Ввод не должен быть пустым. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            input = trimInput(input);
+            if (input.empty()) {
+                std::cout << "Ввод не должен состоять только из пробелов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            if (input.length() > 20 || input.length() < 6) {
+                std::cout << "Пароль должен содержать от 6 до 20 символов. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            bool valid = true;
+            bool hasLetter = false;
+            bool hasDigit = false;
+            for (int i = 0; i < input.length(); ++i) {
+                if (!std::isalnum(input[i]) && input[i] != '-') {
+                    valid = false;
+                    break;
+                }
+                if (input[i] == '-' && (i == 0 || i == input.length() - 1 || !std::isalnum(input[i - 1]) || !std::isalnum(input[i + 1]))) {
+                    valid = false;
+                    break;
+                }
+                if (std::isalpha(input[i])) {
+                    hasLetter = true;
+                }
+                if (std::isdigit(input[i])) {
+                    hasDigit = true;
+                }
+            }
+
+            if (!valid || !isDashHere(input)) {
+                std::cout << "Пароль должен содержать только буквы, цифры и символ '-', расположенный между двумя символами, не в начале, не в конце и без последовательных тире. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            if (!hasLetter || !hasDigit) {
+                std::cout << "Пароль должен содержать хотя бы одну букву и одну цифру. Попробуйте снова." << std::endl;
+                continue;
+            }
+
+            return input;
+        }
     }
 }
