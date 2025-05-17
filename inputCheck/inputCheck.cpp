@@ -102,7 +102,7 @@ namespace mylib {
         double result;
 
         while (true) {
-            std::cout << "Введите число с плавающей точкой: ";
+            std::cout << "Введите число с плавающей точкой (например, 123.45): ";
             std::getline(std::cin, input);
 
             if (input.empty()) {
@@ -116,60 +116,78 @@ namespace mylib {
                 continue;
             }
 
+            // Проверяем формат числа
             int dotCounter = 0;
+            int eCounter = 0;
+            int dotPos = -1;
+            int ePos = -1;
             for (int i = 0; i < input.length(); i++) {
                 if (input[i] == '.') {
                     dotCounter++;
+                    dotPos = i;
+                } else if (input[i] == 'e' || input[i] == 'E') {
+                    eCounter++;
+                    ePos = i;
                 }
             }
-            if (dotCounter > 1) {
-                std::cout << "Точка должна быть только одна!" << std::endl;
+
+            if (dotCounter > 1 || eCounter > 1) {
+                std::cout << "Некорректный формат числа. Допускается одна точка и одно 'e'." << std::endl;
                 continue;
             }
 
             bool valid = true;
-            bool hasDot = (dotCounter == 1);
-            int dotPos = -1;
-            for (int i = 0; i < input.length(); i++) {
-                if (input[i] == '.') {
-                    dotPos = i;
-                    break;
-                }
-            }
             int pos = 0;
-
             if (input[0] == '-') {
                 pos++;
             }
-
-            if (pos == input.length() || !std::isdigit(input[pos])) {
+            if (pos == input.length() || (!std::isdigit(input[pos]) && input[pos] != '.')) {
                 valid = false;
-            } else if (hasDot) {
-                if (dotPos == 0 || dotPos == input.length() - 1 || !std::isdigit(input[dotPos - 1]) || !std::isdigit(input[dotPos + 1])) {
+            } else if (dotCounter == 1) {
+                if (dotPos == 0 || dotPos == input.length() - 1 ||
+                    (dotPos > 0 && !std::isdigit(input[dotPos - 1])) ||
+                    (dotPos < input.length() - 1 && !std::isdigit(input[dotPos + 1]))) {
                     valid = false;
                 }
             }
 
+            if (eCounter == 1) {
+                if (ePos == 0 || ePos == input.length() - 1 ||
+                    (ePos < input.length() - 1 && !std::isdigit(input[ePos + 1]))) {
+                    valid = false;
+                    } else {
+                        // Проверяем часть до 'e'
+                        std::string beforeE = input.substr(0, ePos);
+                        if (beforeE.empty() || (beforeE.length() == 1 && beforeE[0] == '-')) {
+                            valid = false; // Пусто или только минус — недопустимо
+                        }
+                        // Здесь можно добавить более строгую проверку, что beforeE — это число
+                    }
+            }
+
             for (int i = pos; i < input.length(); i++) {
-                if (i != dotPos && !std::isdigit(input[i])) {
+                if (i != dotPos && i != ePos && !std::isdigit(input[i]) &&
+                    input[i] != '-' && input[i] != 'e' && input[i] != 'E') {
                     valid = false;
                     break;
                 }
             }
 
             if (!valid) {
-                std::cout << "Некорректный формат числа. Введите число в формате x.y (где x и y — цифры)." << std::endl;
+                std::cout << "Некорректный формат числа. Введите число в формате x.y или xey (например, 123.45 или 1e6)." << std::endl;
                 continue;
             }
 
             try {
                 std::locale::global(std::locale("C"));
-                result = std::stod(input);
+                result = std::stod(input); // Парсим число, включая научную нотацию
+                std::cout.unsetf(std::ios::fixed); // Сбрасываем форматирование
+
                 return result;
             } catch (const std::invalid_argument& ia) {
                 std::cout << "Некорректный ввод. Введите число с плавающей точкой." << std::endl;
             } catch (const std::out_of_range& oor) {
-                std::cout << "Число выходит за пределы диапазона для типа double." << std::endl;
+                std::cout << "Число слишком велико или слишком мало для типа double. Введите другое значение:" << std::endl;
             }
         }
     }
