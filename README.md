@@ -1,5 +1,4 @@
 #  Library for input validation
-****
 A lightweight C++ library for robust user input validation 
 (strings, numbers, passwords, etc.). 
 Handles edge cases, trims whitespace, 
