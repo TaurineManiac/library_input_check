@@ -12,4 +12,4 @@
 |`trimInput()`|	Trims whitespace from strings|`std::string clean = mylib::trimInput(" hello "); // "hello"std::string trimmed = mylib::trimInput(rawInput);`|
 |`isDashHere()`|Checks dash placement|`bool valid = mylib::isDashHere("well-formed"); // truebool bad = mylib::isDashHere("-bad"); // false`|
 
-[Return back](./readme.md)
+[Return back](./Readme.md)
